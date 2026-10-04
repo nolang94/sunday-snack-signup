@@ -90,7 +90,7 @@ input{font:inherit;font-size:16px;padding:8px 10px;border-radius:8px;border:1px 
     <button class="tab" role="tab" id="tab-hs" data-group="hs" aria-selected="false">High School</button>
   </div>
   <section id="panel" role="tabpanel" data-group="ms" aria-live="polite"><div class="empty">Loading signups…</div></section>
-  <p class="foot">Names and what you bring are visible to everyone with this link. If you need to change a signup you didn't make from this device, ask the organizer.</p>
+  <p class="foot">Names and what you bring are visible to everyone with this link. Anyone with the link can remove a signup, so please only remove your own.</p>
   <noscript><p class="notice">This page needs JavaScript turned on to show and take signups.</p></noscript>
 </main>
 
@@ -105,7 +105,7 @@ input{font:inherit;font-size:16px;padding:8px 10px;border-radius:8px;border:1px 
     DATES.push({iso:d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
       mon:d.toLocaleDateString("en-US",{month:"short"}),day:d.getDate()});
   }
-  var state={group:"ms",signups:{},times:{},open:null,draft:{name:"",snack:"",drinks:""},msg:"",busy:false,loaded:false};
+  var state={group:"ms",signups:{},times:{},open:null,draft:{name:"",snack:"",drinks:""},msg:"",busy:false,loaded:false,confirm:null};
   var mem={}; // fallback if localStorage is unavailable
   function lsGet(k){try{return localStorage.getItem(k);}catch(e){return mem[k]||null;}}
   function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){mem[k]=v;}}
@@ -156,7 +156,14 @@ input{font:inherit;font-size:16px;padding:8px 10px;border-radius:8px;border:1px 
         box.appendChild(h("span",{class:"who"},r.name));
         if(r.snack)box.appendChild(h("span",{class:"what"},"Snack: "+r.snack));
         if(r.drinks)box.appendChild(h("span",{class:"what"},"Drinks: "+r.drinks));
-        if(mine[r.id])box.appendChild(h("button",{class:"link",type:"button",onclick:function(){release(r.id);}},"Remove my signup"));
+        if(state.confirm===r.id){
+          box.appendChild(h("span",{class:"what"},"Remove this signup?"));
+          box.appendChild(h("div",{class:"row"},
+            h("button",{class:"btn solid",type:"button",onclick:function(){release(r.id);}},"Yes, remove"),
+            h("button",{class:"btn quiet",type:"button",onclick:function(){state.confirm=null;render();}},"Keep it")));
+        }else{
+          box.appendChild(h("button",{class:"link",type:"button",onclick:function(){state.confirm=r.id;state.msg="";render();}},"Remove"));
+        }
       }else if(state.open===k){
         var name=h("input",{id:"n-"+k,type:"text",placeholder:"Your name","aria-label":"Your name",value:state.draft.name,maxlength:"40",autocomplete:"name",oninput:function(e){state.draft.name=e.target.value;}});
         var snack=h("input",{id:"s-"+k,type:"text",placeholder:"Snack, e.g. pretzels and fruit cups","aria-label":"Snack",value:state.draft.snack,maxlength:"60",oninput:function(e){state.draft.snack=e.target.value;}});
@@ -218,20 +225,16 @@ input{font:inherit;font-size:16px;padding:8px 10px;border-radius:8px;border:1px 
   }
 
   async function release(id){
-    var token=tokens()[id];
-    if(!token)return;
     try{
-      var res=await api("/rpc/remove_signup",{method:"POST",body:{p_id:id,p_token:token}});
-      if(res.ok){
-        var t=tokens();delete t[id];lsSet("snack-tokens",JSON.stringify(t));
-        state.msg="";
-      }else{state.msg="Couldn't remove that signup. Try again.";}
+      var res=await api("/rpc/remove_signup",{method:"POST",body:{p_id:id}});
+      state.msg=res.ok?"":"Couldn't remove that signup. Try again.";
     }catch(e){state.msg="Couldn't remove that signup. Try again.";}
+    state.confirm=null;
     await load();render();
   }
 
   document.querySelectorAll(".tab").forEach(function(b){
-    b.addEventListener("click",function(){state.group=b.getAttribute("data-group");state.open=null;state.msg="";render();});
+    b.addEventListener("click",function(){state.group=b.getAttribute("data-group");state.open=null;state.confirm=null;state.msg="";render();});
   });
   render();
   load();
