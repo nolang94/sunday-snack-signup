@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Sign up to bring snack and drinks for the middle school and high school groups on Sundays, Oct 4 to Nov 22.">
+<title>Sunday Snack Signup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: one column, group tabs on top, eight Sunday rows each with one family spot covering snack and drinks. */
+:root{
+  color-scheme:light;
+  --bg:#F2F4F7; --surface:#FFFFFF; --ink:#16213A; --muted:#5B667D; --line:#DCE1EA;
+  --ms:#0B7A6F; --ms-soft:#DDF3F0; --hs:#5A43D6; --hs-soft:#E7E3FA; --on-accent:#FFFFFF; --warn:#9A4A06; --warn-soft:#FBEBD7;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1626; --surface:#182238; --ink:#EAF0FB; --muted:#9AA7C2; --line:#2A3652;
+    --ms:#3CC4B5; --ms-soft:#12353A; --hs:#A99BFF; --hs-soft:#272250; --on-accent:#0F1626; --warn:#F0B070; --warn-soft:#3A2A15;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1626; --surface:#182238; --ink:#EAF0FB; --muted:#9AA7C2; --line:#2A3652;
+  --ms:#3CC4B5; --ms-soft:#12353A; --hs:#A99BFF; --hs-soft:#272250; --on-accent:#0F1626; --warn:#F0B070; --warn-soft:#3A2A15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:28px 48px}
+.wrap{max-width:760px;margin-inline:auto;display:flex;flex-direction:column;gap:20px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,6vw,44px);line-height:1.05;margin:6px 0 8px;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:56ch}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.tab{font:inherit;font-weight:700;padding:12px 8px;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer;min-width:0}
+.tab[aria-selected="true"]{color:var(--on-accent)}
+.tab[data-group="ms"][aria-selected="true"]{background:var(--ms)}
+.tab[data-group="hs"][aria-selected="true"]{background:var(--hs)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent,var(--ms));outline-offset:2px}
+#panel{--accent:var(--ms);--accent-soft:var(--ms-soft);display:flex;flex-direction:column;gap:14px}
+#panel[data-group="hs"]{--accent:var(--hs);--accent-soft:var(--hs-soft)}
+.head{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:flex-end;justify-content:space-between}
+h2{font-family:var(--display);font-size:24px;margin:0;font-weight:800}
+.meta{color:var(--muted);font-size:14px;margin-top:2px}
+.meta b{color:var(--ink)}
+.count{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px;width:160px;max-width:100%;margin-left:auto}
+.bar i{display:block;height:100%;background:var(--accent)}
+.notice{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:14px}
+.week{display:grid;grid-template-columns:76px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.date{background:var(--accent-soft);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;text-align:center}
+.date small{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.date strong{font-family:var(--display);font-size:22px;line-height:1.1;color:var(--ink)}
+.slot{min-width:0;border:1px dashed var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.slot.taken{border-style:solid;background:var(--bg)}
+.label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.who{font-weight:700;overflow-wrap:anywhere}
+.what{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.btn{font:inherit;font-weight:700;font-size:14px;border-radius:8px;padding:8px 12px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn.quiet{border-color:var(--line);color:var(--muted)}
+.btn:disabled{opacity:.5;cursor:default}
+.link{font:inherit;font-size:13px;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0;align-self:flex-start}
+form{display:flex;flex-direction:column;gap:6px}
+input{font:inherit;font-size:16px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.empty{color:var(--muted);text-align:center;padding:24px 0}
+.foot{color:var(--muted);font-size:13px}
+@media (max-width:520px){
+  .week{grid-template-columns:1fr}
+  .date{flex-direction:row;gap:8px;justify-content:flex-start;padding:8px 12px}
+  .count{text-align:left}.bar{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="eyebrow">Oct 4 to Nov 22 · 8 Sundays</div>
+    <h1>Sunday Snack Signup</h1>
+    <p class="lede">Each group has about 20 kids. One family covers each Sunday and brings both the snack and the drinks. Pick an open Sunday and add what you plan to bring.</p>
+  </header>
+  <div class="tabs" role="tablist" aria-label="Group">
+    <button class="tab" role="tab" id="tab-ms" data-group="ms" aria-selected="true">Middle School</button>
+    <button class="tab" role="tab" id="tab-hs" data-group="hs" aria-selected="false">High School</button>
+  </div>
+  <section id="panel" role="tabpanel" data-group="ms" aria-live="polite"><div class="empty">Loading signups…</div></section>
+  <p class="foot">Names and what you bring are visible to everyone with this link. If you need to change a signup you didn't make from this device, ask the organizer.</p>
+  <noscript><p class="notice">This page needs JavaScript turned on to show and take signups.</p></noscript>
+</main>
+
+<script>
+(function(){
+  var API="https://uwszlcaypzdqvdxnogcw.supabase.co/rest/v1";
+  var KEY="sb_publishable_FfiL4Ru88yjAxGyzYUnQmg_E4328Mb7";
+  var GROUPS={ms:"Middle School",hs:"High School"};
+  var DATES=[];
+  for(var i=0;i<8;i++){
+    var d=new Date(2026,9,4+7*i);
+    DATES.push({iso:d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
+      mon:d.toLocaleDateString("en-US",{month:"short"}),day:d.getDate()});
+  }
+  var state={group:"ms",signups:{},times:{},open:null,draft:{name:"",snack:"",drinks:""},msg:"",busy:false,loaded:false};
+  var mem={}; // fallback if localStorage is unavailable
+  function lsGet(k){try{return localStorage.getItem(k);}catch(e){return mem[k]||null;}}
+  function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){mem[k]=v;}}
+  state.draft.name=lsGet("snack-name")||"";
+  function tokens(){try{return JSON.parse(lsGet("snack-tokens")||"{}");}catch(e){return {};}}
+  function uuid(){
+    if(window.crypto&&crypto.randomUUID)return crypto.randomUUID();
+    var b=new Uint8Array(16);crypto.getRandomValues(b);b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;
+    var h=Array.from(b,function(x){return x.toString(16).padStart(2,"0");}).join("");
+    return h.slice(0,8)+"-"+h.slice(8,12)+"-"+h.slice(12,16)+"-"+h.slice(16,20)+"-"+h.slice(20);
+  }
+  function api(path,opts){
+    opts=opts||{};
+    var headers={"apikey":KEY,"Content-Type":"application/json"};
+    if(opts.prefer)headers["Prefer"]=opts.prefer;
+    return fetch(API+path,{method:opts.method||"GET",headers:headers,body:opts.body?JSON.stringify(opts.body):undefined});
+  }
+  function h(tag,attrs){
+    var el=document.createElement(tag);
+    if(attrs)for(var k in attrs){
+      if(k==="class")el.className=attrs[k];
+      else if(k.indexOf("on")===0)el.addEventListener(k.slice(2),attrs[k]);
+      else if(attrs[k]!==false&&attrs[k]!=null)el.setAttribute(k,attrs[k]);
+    }
+    for(var j=2;j<arguments.length;j++){var c=arguments[j];if(c==null||c===false)continue;el.appendChild(typeof c==="string"?document.createTextNode(c):c);}
+    return el;
+  }
+  function key(g,iso){return g+"_"+iso;}
+
+  function render(){
+    var g=state.group,panel=document.getElementById("panel"),mine=tokens();
+    panel.setAttribute("data-group",g);
+    ["ms","hs"].forEach(function(k){document.getElementById("tab-"+k).setAttribute("aria-selected",String(k===g));});
+    panel.textContent="";
+    if(!state.loaded){panel.appendChild(h("div",{class:"empty"},state.msg||"Loading signups…"));return;}
+    var filled=0;
+    DATES.forEach(function(d){if(state.signups[key(g,d.iso)])filled++;});
+    var time=state.times[g];
+    panel.appendChild(h("div",{class:"head"},
+      h("div",null,h("h2",null,GROUPS[g]),h("div",{class:"meta"},"Sundays · ",time?h("b",null,time):"Time to be announced"," · about 20 kids")),
+      h("div",{class:"count"},filled+" of "+DATES.length+" Sundays covered",h("div",{class:"bar"},h("i",{style:"width:"+Math.round(filled/DATES.length*100)+"%"})))));
+    if(state.msg)panel.appendChild(h("div",{class:"notice",role:"status"},state.msg));
+
+    DATES.forEach(function(d){
+      var k=key(g,d.iso),r=state.signups[k];
+      var box=h("div",{class:"slot"+(r?" taken":"")},h("span",{class:"label"},"Snack and drinks"));
+      if(r){
+        box.appendChild(h("span",{class:"who"},r.name));
+        if(r.snack)box.appendChild(h("span",{class:"what"},"Snack: "+r.snack));
+        if(r.drinks)box.appendChild(h("span",{class:"what"},"Drinks: "+r.drinks));
+        if(mine[r.id])box.appendChild(h("button",{class:"link",type:"button",onclick:function(){release(r.id);}},"Remove my signup"));
+      }else if(state.open===k){
+        var name=h("input",{id:"n-"+k,type:"text",placeholder:"Your name","aria-label":"Your name",value:state.draft.name,maxlength:"40",autocomplete:"name",oninput:function(e){state.draft.name=e.target.value;}});
+        var snack=h("input",{id:"s-"+k,type:"text",placeholder:"Snack, e.g. pretzels and fruit cups","aria-label":"Snack",value:state.draft.snack,maxlength:"60",oninput:function(e){state.draft.snack=e.target.value;}});
+        var drinks=h("input",{id:"d-"+k,type:"text",placeholder:"Drinks, e.g. water and lemonade","aria-label":"Drinks",value:state.draft.drinks,maxlength:"60",oninput:function(e){state.draft.drinks=e.target.value;}});
+        box.appendChild(h("form",{onsubmit:function(e){e.preventDefault();claim(g,d.iso);}},name,snack,drinks,
+          h("div",{class:"row"},
+            h("button",{class:"btn solid",type:"submit",disabled:state.busy?"":false},state.busy?"Saving…":"Save"),
+            h("button",{class:"btn quiet",type:"button",onclick:function(){state.open=null;state.msg="";render();}},"Cancel"))));
+      }else{
+        box.appendChild(h("button",{class:"btn",type:"button",onclick:function(){
+          state.open=k;state.msg="";render();
+          var el=document.getElementById(state.draft.name?"s-"+k:"n-"+k);if(el)el.focus();
+        }},"Sign up"));
+      }
+      panel.appendChild(h("div",{class:"week"},h("div",{class:"date"},h("small",null,"Sun"),h("strong",null,d.mon+" "+d.day)),box));
+    });
+  }
+
+  function typing(){var a=document.activeElement;return a&&a.tagName==="INPUT"&&a.closest("form");}
+
+  async function load(){
+    try{
+      var res=await Promise.all([api("/signups?select=id,grp,sunday,name,snack,drinks"),api("/settings?select=grp,meeting_time")]);
+      if(!res[0].ok||!res[1].ok)throw new Error("load");
+      var rows=await res[0].json(),sets=await res[1].json();
+      var m={};rows.forEach(function(r){m[key(r.grp,r.sunday)]=r;});
+      state.signups=m;
+      var t={};sets.forEach(function(s){if(s.meeting_time)t[s.grp]=s.meeting_time;});
+      state.times=t;
+      var wasLoaded=state.loaded;
+      state.loaded=true;
+      if(!wasLoaded||!typing()){ if(state.msg==="Couldn't refresh. Check your connection.")state.msg=""; render(); }
+    }catch(e){
+      if(!state.loaded){state.msg="Couldn't load the signups. Check your connection and reload the page.";render();}
+      else if(!typing()){state.msg="Couldn't refresh. Check your connection.";render();}
+    }
+  }
+
+  async function claim(g,iso){
+    var name=state.draft.name.trim(),snack=state.draft.snack.trim(),drinks=state.draft.drinks.trim();
+    if(!name){state.msg="Add your name so everyone knows who is covering.";render();return;}
+    if(state.busy)return;
+    state.busy=true;state.msg="";render();
+    var id=uuid(),token=uuid();
+    try{
+      var res=await api("/signups",{method:"POST",prefer:"return=minimal",body:{id:id,grp:g,sunday:iso,name:name,snack:snack,drinks:drinks,owner_token:token}});
+      if(res.ok){
+        var t=tokens();t[id]=token;lsSet("snack-tokens",JSON.stringify(t));
+        lsSet("snack-name",name);
+        state.open=null;state.draft.snack="";state.draft.drinks="";
+      }else if(res.status===409){
+        state.msg="That Sunday was just taken. Pick another one.";state.open=null;
+      }else{
+        state.msg="That didn't save. Check your connection and try again.";
+      }
+    }catch(e){state.msg="That didn't save. Check your connection and try again.";}
+    state.busy=false;
+    await load();render();
+  }
+
+  async function release(id){
+    var token=tokens()[id];
+    if(!token)return;
+    try{
+      var res=await api("/rpc/remove_signup",{method:"POST",body:{p_id:id,p_token:token}});
+      if(res.ok){
+        var t=tokens();delete t[id];lsSet("snack-tokens",JSON.stringify(t));
+        state.msg="";
+      }else{state.msg="Couldn't remove that signup. Try again.";}
+    }catch(e){state.msg="Couldn't remove that signup. Try again.";}
+    await load();render();
+  }
+
+  document.querySelectorAll(".tab").forEach(function(b){
+    b.addEventListener("click",function(){state.group=b.getAttribute("data-group");state.open=null;state.msg="";render();});
+  });
+  render();
+  load();
+  setInterval(function(){if(!document.hidden&&!typing())load();},20000);
+  document.addEventListener("visibilitychange",function(){if(!document.hidden&&!typing())load();});
+})();
+</script>
+</body>
+</html>
